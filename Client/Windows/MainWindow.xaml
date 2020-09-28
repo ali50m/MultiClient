@@ -37,7 +37,7 @@
 			</Image>
 			-->
 			<StackPanel>
-				<Label Content="LOGO"
+				<Label Content="ClientModbus"
 						 FontSize="36"
 						 VerticalAlignment="Center"
 						 HorizontalAlignment="Center"

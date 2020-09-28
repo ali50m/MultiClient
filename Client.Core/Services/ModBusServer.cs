@@ -181,8 +181,7 @@ namespace Client.Core.Services
 				
 			
 
-			
-
+	
 		}
 		/// <summary>
 		/// Create a new item in the server.

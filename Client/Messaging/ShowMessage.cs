@@ -10,7 +10,6 @@ namespace Client.Messaging
 	{
 		public ShowMessage()
 		{
-
 		}
 		public ShowMessage(string message)
 		{
