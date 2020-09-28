@@ -8,6 +8,7 @@ namespace Client.Core.Services.Enums
 {
 	public enum FileType
 	{
+		None,
 		XML,
 		JSON
 	}

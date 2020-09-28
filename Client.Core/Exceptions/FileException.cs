@@ -8,7 +8,7 @@ namespace Client.Core.Exceptions
 {
 	public class FileException : Exception
 	{
-		public FileException() : base("Error trying to save/load the items")
+		public FileException() : base("Error trying to save or load elements from the file")
 		{
 
 		}
@@ -22,7 +22,7 @@ namespace Client.Core.Exceptions
 		public FileException(string name, Exception exception) : base($"{name}", exception)
 		{
 		}
-		public FileException(Exception exception) : base($"Error trying to save/load the items",exception)
+		public FileException(Exception exception) : base($"Error trying to save or load elements from the file",exception)
 		{
 		}
 

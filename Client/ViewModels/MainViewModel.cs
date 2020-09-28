@@ -33,10 +33,7 @@ namespace Client.ViewModels
 
 		public MainViewModel()
 		{
-			ListOfItemsActive = new ObservableCollection<IItemView>();
-			//ListServers = new List<OPCServerName>();
-			//ListServers.AddRange(MarcomServer.GetServers());
-			
+			ListOfItemsActive = new ObservableCollection<IItemView>();			
 		}
 
 		#region ModBus
@@ -107,7 +104,7 @@ namespace Client.ViewModels
 			}
 			catch (Exception ex)
 			{
-				Messenger.Default.Send(new Messaging.ShowMessage("Error trying to adding an item \n Error: "+ex.Message));
+				Messenger.Default.Send(new Messaging.ShowMessage("Error trying to adding an item \n: "+ex.Message));
 				_Logger.Error("Error trying to adding an item \n "+ ex.Message );
 			}
 				
@@ -148,7 +145,50 @@ namespace Client.ViewModels
 			}
 		}
 
-		#endregion	
+
+		/* File Type change*/
+
+		private FileType fileType;
+
+		public FileType FileType
+		{
+			get { return fileType; }
+			set { fileType = value; OnPropertyChange(); }
+		}
+
+		private RelayCommand _fileTypeCommand;
+
+		public ICommand FileTypeCommand
+		{
+			get {
+				if (_fileTypeCommand == null)
+				{
+					_fileTypeCommand = new RelayCommand(FileTypeChange);
+				}
+				return _fileTypeCommand;
+			}
+			
+		}
+
+		public void FileTypeChange(object parameter)
+		{
+			if (parameter == null) return;
+			switch (parameter.ToString())
+			{
+				case nameof(FileType.XML):
+					FileType = FileType.XML;
+					break;
+				case nameof(FileType.JSON):
+					FileType = FileType.JSON;
+					break;
+				default:
+					FileType = FileType.None;
+					break;
+			}
+		}
+
+
+		#endregion
 
 
 		private String _IpAddress;
@@ -160,40 +200,10 @@ namespace Client.ViewModels
 			set
 			{
 				_IpAddress = value;
-				//Server1.Ip = _IpAddress;
 				OnPropertyChange();
 			}
 
 			}
-
-
-	//private List<OPCServerName> _ListServers;
-	//	public List<OPCServerName> ListServers
-	//	{
-	//		get
-	//		{
-	//			return _ListServers;
-	//		}
-	//		set
-	//		{
-	//			_ListServers = value;
-	//			OnPropertyChange();
-	//		}
-	//	}
-
-	//	private OPCServerName _ItemSelected;
-	//	public OPCServerName ItemSelected
-	//	{
-	//		get
-	//		{
-	//			return _ItemSelected;
-	//		}
-	//		set
-	//		{
-	//			_ItemSelected = value;
-	//			OnPropertyChange();
-	//		}
-	//	}
 
 		private Dictionary<string, List<string>> _TreeListItems;
 		public Dictionary<string, List<string>> TreeListItems
@@ -218,7 +228,6 @@ namespace Client.ViewModels
 				OnPropertyChange();
 			}
 }
-
 		private ObservableCollection<IItemView> _listOfItemsActive;
 		public ObservableCollection<IItemView> ListOfItemsActive
 		{
@@ -272,7 +281,6 @@ namespace Client.ViewModels
 			{
 				if (_ConnectClick == null)
 				{
-					//	_buttonClick = new RelayCommand(CellEdit(_gridItem), CanCellEdit);
 					_ConnectClick = new RelayCommand(async (parameter)=> { await  ClickButtonConnect(parameter); },CanExecuteConnect );
 
 				}
@@ -474,13 +482,21 @@ namespace Client.ViewModels
 		}
 		public void SaveItems(object parameter)
 		{
+			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type")); }
 			SaveFileDialog SaveFileDialog = new SaveFileDialog();
-			SaveFileDialog.Filter = "XML file (*.xml; *.xml) | *.xml;";
+			switch (FileType)	
+			{
+				case FileType.XML:
+					SaveFileDialog.Filter = "XML file (*.xml; *.xml) | *.xml;";
+					break;
+				case FileType.JSON:
+					SaveFileDialog.Filter = "JSON file (*.json; *.json) | *.json;";
+					break;
+			}
 			if (SaveFileDialog.ShowDialog() == true)
 			{
 			_fileManager = FileFactory.GetManager(FileType.XML);
 			if (_fileManager.SaveItems(Server.Items, SaveFileDialog.FileName))
-					//MessageBox.Show("Items Saved");
 				Messenger.Default.Send(new Messaging.ShowMessage("Items Saved"));
 			}
 		}
@@ -500,9 +516,17 @@ namespace Client.ViewModels
 		}
 		public void LoadItems(object parameter)
 		{
-
+			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type")); }
 			OpenFileDialog OpenFileDialog = new OpenFileDialog();
-			OpenFileDialog.Filter = "XML file (*.xml; *.xml) | *.xml;";
+			switch (FileType)
+			{
+				case FileType.XML:
+					OpenFileDialog.Filter = "XML file (*.xml; *.xml) | *.xml;";
+					break;
+				case FileType.JSON:
+					OpenFileDialog.Filter = "JSON file (*.json; *.json) | *.json;";
+					break;
+			}
 			if (OpenFileDialog.ShowDialog() == true)
 			{
 				try
@@ -566,7 +590,6 @@ namespace Client.ViewModels
 			{
 				IItemView item = (IItemView)parameter;
 				WindowUpdate pad = new WindowUpdate(item);
-				//OPCItem item = (OPCItem)parameter;
 				if (pad.ShowDialog() == true)
 				{
 
@@ -586,16 +609,11 @@ namespace Client.ViewModels
 			{
 				_Logger.Error("Error trying to updated item \n" + ex.Message + "\n" + ex.StackTrace);
 				Messenger.Default.Send(new ShowMessage("Error trying to updated item",ex));
-			}
-
-		
-				
+			}			
 					
 		}	
 
 	}
-
-
 
 	/* */
 	struct ItemListStruct

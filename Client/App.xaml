@@ -1,7 +1,7 @@
-﻿<Application x:Class="ClientOPC.App"
+﻿<Application x:Class="Client.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ClientOPC"
+             xmlns:local="clr-namespace:Client"
              StartupUri="Windows/MainWindow.xaml">
     <Application.Resources>
 		

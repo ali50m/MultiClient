@@ -115,81 +115,55 @@
 			</TextBox>
 		</Grid>
 
-				<Grid Grid.Row="3" Grid.ColumnSpan="1" Grid.RowSpan="4" x:Name="GridModbusMarcom" Margin="5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.5*"/>
-						<ColumnDefinition Width="1*"/>
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="0.1*"/>
-						<RowDefinition Height="1*"/>
-					</Grid.RowDefinitions>
+		<Grid Grid.Row="3" Grid.ColumnSpan="1" Grid.RowSpan="4" x:Name="GridModbusMarcom" Margin="5">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="0.5*"/>
+				<ColumnDefinition Width="1*"/>
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="0.1*"/>
+				<RowDefinition Height="1*"/>
+			</Grid.RowDefinitions>
 
 			<GroupBox Header="Items" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2">
-				
-					<Grid Grid.Column="0" Grid.ColumnSpan="2"  Grid.Row="0" Grid.RowSpan="2"
+
+				<Grid Grid.Column="0" Grid.ColumnSpan="2"  Grid.Row="0" Grid.RowSpan="2"
 						IsEnabled="{Binding Path=isConnected}"
 						Visibility="{Binding Path=SelectedClient, Converter={StaticResource ClientTypeToVisibility} ,ConverterParameter=Modbus}" 
 						>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="0.5*"></RowDefinition>
-							<RowDefinition Height="1*"></RowDefinition>
-							<RowDefinition Height="0.5*"></RowDefinition>
-							<RowDefinition Height="2*"></RowDefinition>
-						</Grid.RowDefinitions>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="1*"></ColumnDefinition>
-							<ColumnDefinition Width="1*"></ColumnDefinition>
-						</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="0.5*"></RowDefinition>
+						<RowDefinition Height="1*"></RowDefinition>
+						<RowDefinition Height="0.5*"></RowDefinition>
+						<RowDefinition Height="2*"></RowDefinition>
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="1*"></ColumnDefinition>
+						<ColumnDefinition Width="1*"></ColumnDefinition>
+					</Grid.ColumnDefinitions>
 
-						<Label Content="Adress: "  Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" ></Label>
-						<TextBox Grid.Column="1"  Grid.Row="0" Margin="5" Text="{Binding ModbusAddress,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
+					<Label Content="Adress: "  Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" ></Label>
+					<TextBox Grid.Column="1"  Grid.Row="0" Margin="5" Text="{Binding ModbusAddress,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
 					<StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-					<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Coil" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="Coils"/>
-							<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Discrete Inputs" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="DiscreteInputs"/>
-							<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Holding Register" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="HoldingRegister"/>
-							<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Input Register" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="InputRegister"/>
-						</StackPanel>
-						<Button Grid.Column="1" 
+						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Coil" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="Coils"/>
+						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Discrete Inputs" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="DiscreteInputs"/>
+						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Holding Register" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="HoldingRegister"/>
+						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Input Register" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="InputRegister"/>
+					</StackPanel>
+					<Button Grid.Column="1" 
 							  Command="{Binding AddModbusCommand}"								  
 							  Style="{StaticResource btn-primary}"
 								  
 							  CommandParameter="{Binding ModbusAddress}" Grid.Row="1" Margin="30,10,40,10">
-							<StackPanel Orientation="Horizontal">
-								<icons:PackIconFontAwesome Kind="PlusSolid"  ></icons:PackIconFontAwesome>
-								<TextBlock Text=""></TextBlock>
-							</StackPanel>
-						</Button>
-					</Grid>
+						<StackPanel Orientation="Horizontal">
+							<icons:PackIconFontAwesome Kind="PlusSolid"  ></icons:PackIconFontAwesome>
+							<TextBlock Text=""></TextBlock>
+						</StackPanel>
+					</Button>
+				</Grid>
 			</GroupBox>
 
-				</Grid>
-		<!--<GroupBox x:Name="GroupBoxItems"  Grid.Row="5" Margin="5" Header="Items"
-					  Visibility="{Binding Path=SelectedClient, Converter={StaticResource ClientTypeToVisibility} ,ConverterParameter=MarcomDA}">
-
-			<TreeView x:Name="TreeView" 										
-					 ItemsSource="{Binding TreeListItems,UpdateSourceTrigger=PropertyChanged}"
-					 VirtualizingStackPanel.IsVirtualizing="True"
-					 VirtualizingStackPanel.VirtualizationMode="Recycling"
-					 HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
-				<TreeView.ItemTemplate>
-					<HierarchicalDataTemplate ItemsSource="{Binding Path=Value}" >
-						<TextBlock Text="{Binding Path=Key}" />
-						<HierarchicalDataTemplate.ItemTemplate>
-							<DataTemplate>
-								<TextBlock Text="{Binding . , Converter={StaticResource SubStringKey},ConverterParameter=Key}" />
-								--><!-- Binding empty WHY? because  lis<string>--><!--
-							</DataTemplate>
-						</HierarchicalDataTemplate.ItemTemplate>
-					</HierarchicalDataTemplate>
-				</TreeView.ItemTemplate>
-				<i:Interaction.Triggers>
-					<i:EventTrigger EventName="MouseDoubleClick" >
-						<i:InvokeCommandAction Command="{Binding Path=DoubleClick}" CommandParameter="{Binding ElementName=TreeView,Path=SelectedItem}"/>
-					</i:EventTrigger>
-				</i:Interaction.Triggers>
-			</TreeView>
-		</GroupBox>-->
+		</Grid>
 		<GroupBox x:Name="GroupBoxTabItems" Header="Items"  Grid.Column="1" Grid.RowSpan="6" Grid.ColumnSpan="4" Margin="5">
 			
 		<TabControl  x:Name="tabControl"
@@ -205,15 +179,16 @@
 				<TabItem.Header>
 					<TextBlock Text="Items" FontSize="18" />
 				</TabItem.Header>
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="1.3*"/>
-						<RowDefinition Height="12*"/>
+				<Grid IsEnabled="{Binding isConnected}">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="1.3*"/>
+							<RowDefinition Height="12*"/>
 					</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="0.5*"/>
 							<ColumnDefinition Width="1*"/>
 							<ColumnDefinition Width="2*"/>
+							<ColumnDefinition Width="0.5*"/>
 							<ColumnDefinition Width="0.5*"/>
 							<ColumnDefinition Width="0.5*"/>
 							<ColumnDefinition Width="0.5*"/>
@@ -243,13 +218,12 @@
 							  ToolTip="Delete"
 							  Style="{StaticResource btn-warning}"
 							  IsEnabled="{Binding Path=isConnected}"
-							  Command="{Binding Path=ButtonRemoveItem}"
-							 
+							  Command="{Binding Path=ButtonRemoveItem}"							 
 							  MaxHeight="50"
 							  CommandParameter="{Binding ElementName=dataGrid2,Path=SelectedItem}"
 							  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2" MinWidth="0" MinHeight="0"  Grid.Column="3" Grid.Row="0"   >
 						<StackPanel Orientation="Horizontal">
-							<icons:PackIconFontAwesome Kind="TrashAltSolid" >
+								<icons:PackIconFontAwesome Kind="EraserSolid" >
 							</icons:PackIconFontAwesome>
 							<!--<TextBlock Text="Remove"></TextBlock>-->
 						</StackPanel>
@@ -261,8 +235,8 @@
 							  Command="{Binding Path=ButtonRemoveAll}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="0" MinHeight="0"
 							  Margin="2" Grid.Column="4" Grid.Row="0" >
 						<StackPanel Orientation="Horizontal">
-							<icons:PackIconFontAwesome Kind="TrashAltSolid" ></icons:PackIconFontAwesome>
-							<!--<TextBlock Text="RemoveAll"></TextBlock>-->
+								<icons:PackIconFontAwesome Kind="TrashAltSolid" ></icons:PackIconFontAwesome>
+								<!--<TextBlock Text="RemoveAll"></TextBlock>-->
 						</StackPanel>
 					</Button>
 					<Button x:Name="buttonSave" ToolTip="Save in file"  Style="{StaticResource btn-success}" IsEnabled="{Binding Path=isConnected}" Command="{Binding Path=ButtonSave}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="0" MinHeight="0" Margin="2" Grid.Column="5" Grid.Row="0" >
@@ -279,6 +253,14 @@
 
 					</Button>
 
+
+
+						<StackPanel Grid.Column="7" Grid.Row="0">
+							<RadioButton Grid.Column="7" Grid.Row="0" GroupName="filetype" Content="XML" Command="{Binding FileTypeCommand}" CommandParameter="XML" />
+							<RadioButton Grid.Column="7" Grid.Row="0" GroupName="filetype" Content="JSON" Command="{Binding FileTypeCommand}" CommandParameter="JSON" />
+						</StackPanel>
+						
+					
 					<DataGrid x:Name="dataGrid2"
 								 RowStyle="{StaticResource RowStyleWithAlternation}"
 								 CanUserAddRows="False"
@@ -307,12 +289,7 @@
 			</TabItem>
 		</TabControl>
 		</GroupBox>
-
-
-		<!--Controls Loading Form-->
-		<!--<Rectangle  Fill="Gray" Opacity="0.5" Stroke="Gray" StrokeThickness="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" RadiusX="8" RadiusY="8" MinHeight="100" MinWidth="100"  Visibility="{Binding Loading, 
-        Converter={StaticResource ConverterBoolean}}"  Grid.ColumnSpan="5" Grid.RowSpan="4"  Margin="0,0,0,0" />-->
-
+	
 		<mah:ProgressRing  Visibility="{Binding Path=IsBusy, Converter={StaticResource ConverterBoolean},Mode=TwoWay}"
 			Grid.Column="0" Grid.Row="1" Grid.RowSpan="5" Grid.ColumnSpan="1" Width="100" 
                   IsActive="True">
