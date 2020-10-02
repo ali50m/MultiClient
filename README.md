@@ -3,7 +3,7 @@
 Client Application in .NET using WPF for reading OPC items with diferents protocols
 
 <p align="center">
-  <img src="Screen.PNG" alt="" width="400"/>
+  <img src="MT.PNG" alt="" width="400"/>
 </p>
 
 ## Features
