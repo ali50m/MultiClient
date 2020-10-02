@@ -33,7 +33,16 @@ namespace Client.ViewModels
 
 		public MainViewModel()
 		{
-			ListOfItemsActive = new ObservableCollection<IItemView>();			
+			ListOfItemsActive = new ObservableCollection<IItemView>();
+
+			//When the file type change update the fileManager
+			this.PropertyChanged += (sender, args) =>
+			{
+				if(args.PropertyName== nameof(FileType))
+				{
+					_fileManager = FileFactory.GetManager(fileType);
+				}
+			};
 		}
 
 		#region ModBus
@@ -104,7 +113,7 @@ namespace Client.ViewModels
 			}
 			catch (Exception ex)
 			{
-				Messenger.Default.Send(new Messaging.ShowMessage("Error trying to adding an item \n: "+ex.Message));
+				Messenger.Default.Send(new Messaging.ShowMessage(ex.Message));
 				_Logger.Error("Error trying to adding an item \n "+ ex.Message );
 			}
 				
@@ -317,14 +326,17 @@ namespace Client.ViewModels
 							}
 							else
 							{
-								Server.Disconnect();
+								Server.Disconnect();								
 								//TreeListItems = null;
 								//This code need to run in the UI Thread so invoke a delegate to handle this job.
 								Application.Current.Dispatcher.Invoke((System.Action)delegate
 								{
 									TreeListItems = new Dictionary<string, List<string>>();
 									ListOfItemsActive.Clear();
-								});							
+								});
+								IpAddress = string.Empty;
+								ModbusAddress = string.Empty;
+								ModBusType = ItemType.None;
 								TextButtonConect = StatusConnection.Connect;
 								isConnected = false;
 								Server = null;
@@ -482,7 +494,7 @@ namespace Client.ViewModels
 		}
 		public void SaveItems(object parameter)
 		{
-			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type")); }
+			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type")); return; }
 			SaveFileDialog SaveFileDialog = new SaveFileDialog();
 			switch (FileType)	
 			{
@@ -495,9 +507,12 @@ namespace Client.ViewModels
 			}
 			if (SaveFileDialog.ShowDialog() == true)
 			{
-			_fileManager = FileFactory.GetManager(FileType.XML);
-			if (_fileManager.SaveItems(Server.Items, SaveFileDialog.FileName))
-				Messenger.Default.Send(new Messaging.ShowMessage("Items Saved"));
+				if (_fileManager != null)
+				{
+					if (_fileManager.SaveItems(Server.Items, SaveFileDialog.FileName))
+						Messenger.Default.Send(new Messaging.ShowMessage("Items Saved"));
+
+				}
 			}
 		}
 
@@ -516,7 +531,7 @@ namespace Client.ViewModels
 		}
 		public void LoadItems(object parameter)
 		{
-			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type")); }
+			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type")); return; }
 			OpenFileDialog OpenFileDialog = new OpenFileDialog();
 			switch (FileType)
 			{
@@ -531,14 +546,16 @@ namespace Client.ViewModels
 			{
 				try
 				{
-
-					var items = _fileManager.ReadItems(OpenFileDialog.FileName);
+					if (_fileManager != null)
+					{
+						var items = _fileManager.ReadItems(OpenFileDialog.FileName);
 
 					foreach (var item in items)
 					{
-						IItem itemCreated = Server.CreateItem(item.ItemID);
+						IItem itemCreated = Server.CreateItem(item.ItemID,item.ItemType);
 						if (itemCreated != null)
 							ListOfItemsActive.Add(new ItemViewModel(itemCreated));					
+					}
 					}
 				}
 				catch (Exception ex)

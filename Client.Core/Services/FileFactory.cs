@@ -22,7 +22,7 @@ namespace Client.Core.Services
 				case FileType.XML:
 					return new XmlServices();
 				case FileType.JSON:
-					return new XmlServices();
+					return new JsonServices();
 				default:
 					return null;
 

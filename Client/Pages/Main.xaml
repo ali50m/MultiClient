@@ -145,10 +145,10 @@
 					<Label Content="Adress: "  Grid.Column="0" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" ></Label>
 					<TextBox Grid.Column="1"  Grid.Row="0" Margin="5" Text="{Binding ModbusAddress,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
 					<StackPanel Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Coil" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="Coils"/>
-						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Discrete Inputs" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="DiscreteInputs"/>
-						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Holding Register" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="HoldingRegister"/>
-						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Input Register" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="InputRegister"/>
+						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Coil" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="Coils" Background="Transparent"/>
+						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Discrete Inputs" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="DiscreteInputs" Background="Transparent" />
+						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Holding Register" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="HoldingRegister" Background="Transparent" />
+						<RadioButton Grid.Column="0" Grid.Row="1" GroupName="modbus" Content="Input Register" Command="{Binding ModBusTypeRadioButtonCommand}" CommandParameter="InputRegister" Background="Transparent"/>
 					</StackPanel>
 					<Button Grid.Column="1" 
 							  Command="{Binding AddModbusCommand}"								  

@@ -43,6 +43,16 @@ namespace Client.Core.Models
 		{
 			try
 			{
+				if (int.TryParse(this.ItemID, out int resultint))
+				{
+					if (resultint > 65535)
+						throw new ServerException("Range invalid th number can't be to bigger that 65535");
+				}
+				else
+				{
+					throw new ServerException("The address is not a valid integer");
+				}
+				
 			switch (this.DataType)
 			{
 				case VarEnum.VT_BOOL:					
@@ -73,16 +83,11 @@ namespace Client.Core.Models
 					int result2;
 					if (this.AccessRights == AccessRights.READWRITEABLE)
 					{
-						try
-						{
+						
 						result2 = Parent.ReadHoldingRegister(int.Parse(this.ItemID));
 
-						}
-						catch (Exception ex)
-						{
-							return;
-						//throw;
-						}
+						
+						
 						//var x = Parent.modbusClient.ReadHoldingRegisters(0, 10);
 					}
 					else
@@ -102,13 +107,41 @@ namespace Client.Core.Models
 			}
 
 			}
+			catch (ServerException ex)
+			{
+				throw new ServerException(ex.Message, ex);
+			}
 			catch (EasyModbus.Exceptions.StartingAddressInvalidException ex)
 			{
 				//Return an exception when the variable not exist in the server
 				throw new ServerException("Starting address invalid", ex);
 			}
+			catch (EasyModbus.Exceptions.ConnectionException ex)
+			{
+				//Return an exception when the variable not exist in the server
+				throw new ServerException("Connection error", ex);
+			}
+			catch (EasyModbus.Exceptions.CRCCheckFailedException ex)
+			{
+
+				throw new ServerException("CRC Check Failed", ex);
+			}
+			catch (EasyModbus.Exceptions.SerialPortNotOpenedException ex)
+			{
+				throw new ServerException("Serial Port Not Opened", ex);
+
+			}
+			catch (EasyModbus.Exceptions.QuantityInvalidException ex)
+			{
+				throw new ServerException("Quantity invalid address invalid", ex);
+			}
 			catch (Exception ex)
 			{
+				// this conditional is for handle other exceptions that are not explicit in the EasyModBus Exceptions
+				if (ex.Source == nameof(EasyModbus))
+				{
+					throw new ServerException(ex.Message);
+				}
 				//other types of exceptions don't handle (mostly they are that the reading time ends)
 				return;
 			}
