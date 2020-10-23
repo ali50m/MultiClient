@@ -1,9 +1,11 @@
-﻿using Client.Messaging;
+﻿using Client.Core.Services;
+using Client.Messaging;
 using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,6 +31,7 @@ namespace Client.Windows
 
 		public MainWindow()
 		{
+		
 				InitializeComponent();
 				Panel.Navigate(new Uri("Pages/Main.xaml", UriKind.Relative));
 
@@ -36,10 +39,15 @@ namespace Client.Windows
 			{				
 				MessageBox.Show(m.Text);
 			});
+
+
 		}
 
+		private void Window_Loaded(object sender, RoutedEventArgs e)
+		{
 
+			VersionApplication.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
-
+		}
 	}
 }

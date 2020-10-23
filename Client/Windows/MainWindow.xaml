@@ -7,7 +7,7 @@
 		  xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
 		   WindowStartupLocation="CenterScreen"  Background="WhiteSmoke"
-        Title="ClientModbus" Height="600" Width="1000">
+        Title="MultiClient" Height="600" Width="1000" Loaded="Window_Loaded" >
 
 	<Grid>
 		<Grid.RowDefinitions>
@@ -46,7 +46,7 @@
 			<Label FontFamily="Arial" FontSize="15" Grid.Column="2" Foreground="Black" FontWeight="Bold" FontStyle="Italic" VerticalAlignment="Center" HorizontalAlignment="Right">
 				<StackPanel>
 					<TextBlock FontFamily="Arial" FontWeight="Bold" FontStyle="Normal" Text="Copyright 2020"></TextBlock>
-					<TextBlock Text="V2.0.0" TextAlignment="Right"></TextBlock>
+					<TextBlock x:Name="VersionApplication" Text="" TextAlignment="Right"></TextBlock>
 				</StackPanel>
 			</Label>
 		</Grid>

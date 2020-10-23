@@ -18,6 +18,7 @@ using Client.Windows;
 using Client.Messaging;
 using System.Windows.Threading;
 using log4net;
+using System.Reflection;
 
 namespace Client.ViewModels
 {
@@ -44,6 +45,8 @@ namespace Client.ViewModels
 				}
 			};
 		}
+
+	
 
 		#region ModBus
 			private List<ClientType> _listClients;
@@ -155,64 +158,41 @@ namespace Client.ViewModels
 		}
 
 
-		/* File Type change*/
-
-		private FileType fileType;
-
-		public FileType FileType
-		{
-			get { return fileType; }
-			set { fileType = value; OnPropertyChange(); }
-		}
-
-		private RelayCommand _fileTypeCommand;
-
-		public ICommand FileTypeCommand
-		{
-			get {
-				if (_fileTypeCommand == null)
-				{
-					_fileTypeCommand = new RelayCommand(FileTypeChange);
-				}
-				return _fileTypeCommand;
-			}
-			
-		}
-
-		public void FileTypeChange(object parameter)
-		{
-			if (parameter == null) return;
-			switch (parameter.ToString())
-			{
-				case nameof(FileType.XML):
-					FileType = FileType.XML;
-					break;
-				case nameof(FileType.JSON):
-					FileType = FileType.JSON;
-					break;
-				default:
-					FileType = FileType.None;
-					break;
-			}
-		}
+		
 
 
 		#endregion
 
 
-		private String _IpAddress;
-		public String IpAddress {
-			get
-			{
-				return _IpAddress;
-			}
-			set
-			{
-				_IpAddress = value;
-				OnPropertyChange();
-			}
+	
+		#region OPCDA
 
-			}
+		private ObservableCollection<string> _browseList;		
+
+		public ObservableCollection<string> BrowseList
+		{
+			get { return _browseList; }
+			set { _browseList = value; OnPropertyChange(); }
+		}
+
+		private List<string> _listServers;
+
+		public List<string> ListServers
+		{
+			get { return _listServers = OPCDAServer.getAvaliableServers(); }
+			set { _listServers = value; OnPropertyChange(); }
+		}
+
+		private string _serverselected;
+
+		public string ServerSelected
+		{
+			get { return _serverselected; }
+			set { _serverselected = value; OnPropertyChange(); }
+		}
+
+		private List<string> ListItemsInServer;
+
 
 		private Dictionary<string, List<string>> _TreeListItems;
 		public Dictionary<string, List<string>> TreeListItems
@@ -224,7 +204,6 @@ namespace Client.ViewModels
 				OnPropertyChange();
 			}
 		}
-
 		private string _TextTable;
 		public string TextTable {
 			get
@@ -249,7 +228,89 @@ namespace Client.ViewModels
 				OnPropertyChange();
 			}
 		}
-	
+
+
+		/*ADD Item Button Double Click.*/
+		private RelayCommand _DoubleClick;
+		public ICommand DoubleClick
+		{
+			get
+			{
+				if (_DoubleClick == null)
+				{
+					_DoubleClick = new RelayCommand(AddItem);
+				}
+				return _DoubleClick;
+			}
+		}
+		public void AddItem(object parameter)
+		{
+			try
+			{
+				if(!(parameter is string)) { return; }
+				IItem oPCItem = Server.CreateItem(parameter.ToString());
+				if (oPCItem != null)
+				{
+					ListOfItemsActive.Add(new ItemViewModel(oPCItem));
+				}
+				else
+				{
+					Messenger.Default.Send(new Messaging.ShowMessage("The item is already in the list."));
+				}
+			}
+			catch (Exception ex)
+			{
+				_Logger.Error("Occurred an exception trying to added an item \n"+ex.Message +"\n" +ex.StackTrace);			
+				Messenger.Default.Send(new Messaging.ShowMessage(ex.Message));
+			}
+
+		}
+		
+		
+		/* FIND ITEMS Browse ON TEXT CHANGE */
+		private RelayCommand _TextChangeFilterItemsCommand;
+		public ICommand TextChangeFilterItemsCommand
+		{
+			get
+			{
+				if (_TextChangeFilterItemsCommand == null)
+				{
+					_TextChangeFilterItemsCommand = new RelayCommand(FilterItems);
+				}
+				return _TextChangeFilterItemsCommand;
+			}
+		}
+		private void FilterItems(object parameter)
+		{
+
+			//TODO
+			TreeListItems =  SorterItems(ListItemsInServer
+													.Where(
+		  												x => x.Contains(parameter.ToString())
+														
+															)
+													.ToList());
+		}
+		#endregion
+
+
+
+		#region Common
+
+		private String _IpAddress;
+		public String IpAddress
+		{
+			get
+			{
+				return _IpAddress;
+			}
+			set
+			{
+				_IpAddress = value;
+				OnPropertyChange();
+			}
+
+		}
 		/* Status Of Connection for change the name of the button */
 		public String _TextButtonConect=StatusConnection.Connect;
 		public String TextButtonConect {
@@ -302,9 +363,9 @@ namespace Client.ViewModels
 			return !IsBusy;
 		}
 
-		public async Task ClickButtonConnect(object parameter)
+ 		public async Task ClickButtonConnect(object parameter)
 		{
-			//if(SelectedClient == ClientType.MarcomDA && ItemSelected == null) { Messenger.Default.Send(new Messaging.ShowMessage("You have to select a ServerName"));/* MessageBox.Show("You have to select a ServerName");*/ return; }
+			if(SelectedClient == ClientType.OPCDA && ServerSelected == null) { Messenger.Default.Send(new Messaging.ShowMessage("You have to select a ServerName"));/* MessageBox.Show("You have to select a ServerName");*/ return; }
 			await Task.Run(() =>
 					{
 						try
@@ -317,11 +378,16 @@ namespace Client.ViewModels
 								Server = ServerFactory.CreateServer(SelectedClient);
 								Server.Ip = IpAddress;
 								Server.Port = 502;
-								Server.Name = "Modbus";
+								if(SelectedClient == ClientType.Modbus)
+									Server.Name = "Modbus";
+								if (SelectedClient == ClientType.OPCDA)
+									Server.Name = ServerSelected;
 								Server.Connect();
 								TextButtonConect = StatusConnection.Disconnect;
 								isConnected = true;
-								TreeListItems = Server.GetListItems();
+								BrowseList = new ObservableCollection<string>(Server.BrowseItems());
+								ListItemsInServer = Server.BrowseItems();
+								TreeListItems = SorterItems(ListItemsInServer);
 								_Logger.Info("Connected to " +IpAddress + " Server "+ SelectedClient + " successful");
 							}
 							else
@@ -333,6 +399,7 @@ namespace Client.ViewModels
 								{
 									TreeListItems = new Dictionary<string, List<string>>();
 									ListOfItemsActive.Clear();
+									BrowseList.Clear();
 								});
 								IpAddress = string.Empty;
 								ModbusAddress = string.Empty;
@@ -346,59 +413,11 @@ namespace Client.ViewModels
 						{
 							Server = null;
 							_Logger.Error("Occurred an error trying to Connect/Disconnect to the server:\n "+ ex.Message + "\n"+ex.StackTrace);
-							Messenger.Default.Send(new Messaging.ShowMessage(ex.Message+"\n" + ex.StackTrace));
+							Messenger.Default.Send(new Messaging.ShowMessage(ex.Message));
 						}
 						
 							IsBusy = false;
 					});
-		}
-
-		/*ADD Item Button Double Click.*/
-		private RelayCommand _DoubleClick;
-		public ICommand DoubleClick
-		{
-			get
-			{
-				if (_DoubleClick == null)
-				{
-					_DoubleClick = new RelayCommand(AddItem);
-				}
-				return _DoubleClick;
-			}
-		}
-		public void AddItem(object parameter)
-		{
-			if(parameter == null) { return; }
-			string itemName;
-			if (parameter.GetType() == typeof(ItemListStruct) )
-				{
-					ItemListStruct item = (ItemListStruct)parameter;
-					 itemName = item.ItemID;
-
-			}
-			else
-			{
-				itemName = parameter.ToString();
-			}
-			try
-			{
-				IItem oPCItem = Server.CreateItem(itemName);
-				if (oPCItem != null)
-				{
-					ListOfItemsActive.Add(new ItemViewModel(oPCItem));
-				}
-				else
-				{
-					Messenger.Default.Send(new Messaging.ShowMessage("The item is already in the list."));
-				}
-
-			}
-			catch (Exception ex)
-			{
-				_Logger.Error("Occurred an exception trying to added an item \n"+ex.Message +"\n" +ex.StackTrace);			
-				Messenger.Default.Send(new Messaging.ShowMessage(ex.Message,ex));
-			}
-
 		}
 
 
@@ -419,16 +438,9 @@ namespace Client.ViewModels
 		private void RemoveItem(object parameter){
 			IItemView item = (IItemView)parameter;
 			if (item != null)
-			{
-				switch (SelectedClient)
-				{					
-					case ClientType.Modbus:
+			{				
 						Server.RemoveItem(item.ItemID,item.ItemType);
-						ListOfItemsActive.Remove(item);
-						break;
-					default:
-						break;
-				}
+						ListOfItemsActive.Remove(item);									
 			}
 			else
 			{				
@@ -454,6 +466,7 @@ namespace Client.ViewModels
 			TreeListItems = Server.GetListItems(parameter.ToString());
 		}
 
+
 		/* Button Remove All*/
 		private RelayCommand _buttonRemoveAll;
 		public ICommand ButtonRemoveAll
@@ -468,18 +481,80 @@ namespace Client.ViewModels
 			}
 		}
 		private void RemoveAll(object obj)
-		{
-			switch (SelectedClient)
-			{
-				case ClientType.Modbus:
+		{			
 					Server.RemoveAll();
 					ListOfItemsActive.Clear();
-					break;
-				default:
-					break;
-			}		
+					
 		}
-		/* button SAVE */
+
+		/* FIND ITEM ACTIVE ON TEXT CHANGE*/
+		private RelayCommand _TextChangeItemsActive;
+		public ICommand TextChangeItemsActive
+		{
+			get
+			{
+				if (_TextChangeItemsActive == null)
+				{
+					_TextChangeItemsActive = new RelayCommand(FindItemAct);
+				}
+				return _TextChangeItemsActive;
+			}
+		}
+		private void FindItemAct(object parameter){
+			TextTable = parameter.ToString();
+			ListOfItemsActive = new ObservableCollection<IItemView>(Server.Items.Where(x=> x.ItemID.Contains(parameter.ToString())).Select(y => new ItemViewModel(y)).ToList());
+		}
+
+
+		/* UPDATE ITEM*/
+		private RelayCommand _UpdateElement;
+		public ICommand UpdateElement
+		{
+			get
+			{
+				if (_UpdateElement == null)
+				{
+					_UpdateElement = new RelayCommand(UpdateOPC);
+				}
+				return _UpdateElement;
+			}
+		}
+		private void UpdateOPC(object parameter)
+		{
+
+			try
+			{
+				IItemView item = (IItemView)parameter;
+				WindowUpdate pad = new WindowUpdate(item);
+				if (pad.ShowDialog() == true)
+				{
+
+					switch (SelectedClient)
+					{
+						case ClientType.Modbus:
+							if (item.ItemType == ItemType.HoldingRegister || item.ItemType == ItemType.Coils)
+								Server.WriteItem(item.ItemID, pad.textBox.Text);
+							break;
+						case ClientType.OPCDA:
+							Server.WriteItem(item.ItemID, pad.textBox.Text);
+							break;
+						default:
+							break;
+					}
+
+				}
+			}
+			catch (Exception ex)
+			{
+				_Logger.Error("Error trying to updated item \n" + ex.Message + "\n" + ex.StackTrace);
+				Messenger.Default.Send(new ShowMessage("Error trying to updated item",ex));
+			}			
+					
+		}
+
+
+
+		/* button SAVE in file */
 		public RelayCommand _ButtonSave;
 		public ICommand ButtonSave
 		{
@@ -516,7 +591,7 @@ namespace Client.ViewModels
 			}
 		}
 
-		/* button LOAD */
+		/* button LOAD from file  */
 		public RelayCommand _ButtonLoad;
 		public ICommand ButtonLoad
 		{
@@ -566,80 +641,84 @@ namespace Client.ViewModels
 				}
 			}
 		}
-
-
-		/* FIND ITEM ACTIVE ON TEXT CHANGE*/
-		private RelayCommand _TxtChangeCommand2;
-		public ICommand TxtChangeCommand2
-		{
-			get
-			{
-				if (_TxtChangeCommand2 == null)
-				{
-					_TxtChangeCommand2 = new RelayCommand(FindItemAct);
-				}
-				return _TxtChangeCommand2;
-			}
-		}
-		private void FindItemAct(object parameter){
-			TextTable = parameter.ToString();
-			ListOfItemsActive = new ObservableCollection<IItemView>(Server.Items.Where(x=> x.ItemID.Contains(parameter.ToString())).Select(y => new ItemViewModel(y)).ToList());
-		}
-
-
-		/* UPDATE ITEM*/
-		private RelayCommand _UpdateElement;
-		public ICommand UpdateElement
-		{
-			get
-			{
-				if (_UpdateElement == null)
-				{
-					_UpdateElement = new RelayCommand(UpdateOPC);
-				}
-				return _UpdateElement;
-			}
-		}
-		private void UpdateOPC(object parameter)
-		{
-
-			try
-			{
-				IItemView item = (IItemView)parameter;
-				WindowUpdate pad = new WindowUpdate(item);
-				if (pad.ShowDialog() == true)
-				{
-
-					switch (SelectedClient)
-					{
-						case ClientType.Modbus:
-							if (item.ItemType == ItemType.HoldingRegister || item.ItemType == ItemType.Coils)
-								Server.WriteItem(item.ItemID, pad.textBox.Text);
-							break;
-						default:
-							break;
-					}
-
-				}
-			}
-			catch (Exception ex)
-			{
-				_Logger.Error("Error trying to updated item \n" + ex.Message + "\n" + ex.StackTrace);
-				Messenger.Default.Send(new ShowMessage("Error trying to updated item",ex));
-			}			
-					
-		}	
-
-	}
-
-	/* */
-	struct ItemListStruct
-	{
-		public String ItemID { get; set; }
 		
+		/* File Type change*/
+
+		private FileType fileType;
+
+		public FileType FileType
+		{
+			get { return fileType; }
+			set { fileType = value; OnPropertyChange(); }
+		}
+
+		private RelayCommand _fileTypeCommand;
+
+		public ICommand FileTypeCommand
+		{
+			get
+			{
+				if (_fileTypeCommand == null)
+				{
+					_fileTypeCommand = new RelayCommand(FileTypeChange);
+				}
+				return _fileTypeCommand;
+			}
+
+		}
+
+		public void FileTypeChange(object parameter)
+		{
+			if (parameter == null) return;
+			switch (parameter.ToString())
+			{
+				case nameof(FileType.XML):
+					FileType = FileType.XML;
+					break;
+				case nameof(FileType.JSON):
+					FileType = FileType.JSON;
+					break;
+				default:
+					FileType = FileType.None;
+					break;
+			}
+		}
+
+		private Dictionary<string,List<string>> SorterItems(List<string> items)
+		{
+				var dic = new Dictionary<string, List<string>>();
+			if(items!= null && items.Count() > 0)
+			{
+				foreach (var item in items)
+				{
+					string path = item;
+					string parent="";
+					do
+					{
+						var pos=path.IndexOf(".");
+						parent = parent + path.Substring(0, pos+1);
+						path =path.Substring(pos+1);
+					
+					} while (path.Contains("."));
+
+					if (dic.ContainsKey(parent))
+					{
+						dic[parent].Add(item);
+					}
+					else
+					{
+						dic.Add(parent, new List<string>());
+							dic[parent].Add(item);
+					}
+				}
+			}
+			return dic;
+		}
+		#endregion
+
+
+
 	}
-
-
 	/* Status of connection for change the name of the button */
 	public static class StatusConnection
 	{

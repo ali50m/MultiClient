@@ -6,7 +6,8 @@
 		Coils=1,
 		DiscreteInputs=2,
 		InputRegister=3,
-		HoldingRegister=4
+		HoldingRegister=4,
+		DA=5
 	}
 	
 

@@ -20,7 +20,7 @@ namespace Client.Converters
 			}
 			else
 			{
-				return Visibility.Hidden;
+				return Visibility.Collapsed;
 			}
 		}
 

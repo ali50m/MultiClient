@@ -376,6 +376,11 @@ namespace Client.Core.Services
 			//Not Implement in modbus
 			return new Dictionary<string, List<string>>();
 		}
+
+		public List<string> BrowseItems()
+		{
+			return new List<string>();
+		}
 	}
 
 

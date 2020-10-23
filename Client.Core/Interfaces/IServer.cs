@@ -64,5 +64,6 @@ namespace Client.Core.Interfaces
 		void RemoveAll();
 
 		Dictionary<string, List<string>> GetListItems(string value = "");
+		List<string> BrowseItems();
 	}
 }

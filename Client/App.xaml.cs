@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Client.Core.Services;
 using log4net;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace ClientOPC
 		private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		protected override void OnStartup(StartupEventArgs e)
-		{
+		{		
 			//Start Logger
 			log4net.Config.XmlConfigurator.Configure();
 			Log.Info("Start Application");

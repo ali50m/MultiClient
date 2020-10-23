@@ -22,7 +22,7 @@ namespace Client.Models
 			this.Item.Updated += Item_Updated;
 		}
 
-		public string ItemID { get => Item.ItemID.ToString(); set { Item.ItemID = value; OnPropertyChange(); } }
+		public string ItemID { get => Item.ItemID.ToString(); /*private set { Item.ItemID = value; OnPropertyChange(); }*/ }
 
 		public object Value { get => Item.Value; }
 

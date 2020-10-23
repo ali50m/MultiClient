@@ -16,6 +16,8 @@ namespace Client.Core.Services
 			{				
 				case ClientType.Modbus:
 					return new ModBusServer();
+				case ClientType.OPCDA:
+						return new OPCDAServer();
 				default:
 					return null;
 

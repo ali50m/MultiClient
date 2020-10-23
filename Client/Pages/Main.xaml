@@ -74,7 +74,7 @@
 							IsEnabled="{Binding Path=isConnected,Converter={StaticResource BooleanToEnableConverter}}"
 							Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2" Text="{Binding IpAddress,UpdateSourceTrigger=PropertyChanged}" ></TextBox>
 			</Grid>
-			<Grid Grid.Row="3" x:Name="GridCombo" Visibility="{Binding Path=SelectedClient, Converter={StaticResource ClientTypeToVisibility} ,ConverterParameter=MarcomDA}">
+			<Grid Grid.Row="3" x:Name="GridCombo" Visibility="{Binding Path=SelectedClient, Converter={StaticResource ClientTypeToVisibility} ,ConverterParameter=OPCDA}">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="0.5*"/>
 					<ColumnDefinition Width="1*"/>
@@ -87,9 +87,8 @@
 			<ComboBox x:Name="comboBox" HorizontalAlignment="Stretch"
 							 IsEnabled="{Binding Path=isConnected,Converter={StaticResource BooleanToEnableConverter},Mode=TwoWay}"
 							 ItemsSource="{Binding Path=ListServers}"
-							 SelectedItem="{Binding Path=ItemSelected}"
-						 
-							 DisplayMemberPath="ProgID" Margin="3" Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" MinWidth="120"/>
+							 SelectedItem="{Binding Path=ServerSelected}"						 
+							Margin="3" Grid.Row="1" Grid.Column="1" VerticalAlignment="Stretch" MinWidth="120"/>
 		</Grid>
 			<Grid Grid.Row="4" x:Name="GridLabelFind">
 				<Grid.ColumnDefinitions>
@@ -115,19 +114,18 @@
 			</TextBox>
 		</Grid>
 
-		<Grid Grid.Row="3" Grid.ColumnSpan="1" Grid.RowSpan="4" x:Name="GridModbusMarcom" Margin="5">
+	<GroupBox Header="Items"  Grid.ColumnSpan="1" Grid.Row="4" Grid.RowSpan="4" >
+			<Grid Grid.ColumnSpan="2" Grid.RowSpan="2" x:Name="GridModbusMarcom" Margin="5">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="0.5*"/>
 				<ColumnDefinition Width="1*"/>
 			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="0.1*"/>
-				<RowDefinition Height="1*"/>
-			</Grid.RowDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="0.1*"/>
+					<RowDefinition Height="1*"/>
+				</Grid.RowDefinitions>
 
-			<GroupBox Header="Items" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Grid.RowSpan="2">
-
-				<Grid Grid.Column="0" Grid.ColumnSpan="2"  Grid.Row="0" Grid.RowSpan="2"
+				<Grid Grid.ColumnSpan="2" Grid.RowSpan="2"
 						IsEnabled="{Binding Path=isConnected}"
 						Visibility="{Binding Path=SelectedClient, Converter={StaticResource ClientTypeToVisibility} ,ConverterParameter=Modbus}" 
 						>
@@ -161,9 +159,70 @@
 						</StackPanel>
 					</Button>
 				</Grid>
-			</GroupBox>
+				<StackPanel ScrollViewer.VerticalScrollBarVisibility="Visible"  Visibility="{Binding Path=SelectedClient, Converter={StaticResource ClientTypeToVisibility} ,ConverterParameter=OPCDA}" 
+					Background="White" Grid.ColumnSpan="2" Grid.RowSpan="2">
+					<DockPanel  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+						<icons:PackIconFontAwesome Kind="SearchSolid" HorizontalAlignment="Center" VerticalAlignment="Center" ></icons:PackIconFontAwesome>
+					<TextBox x:Name="TextBoxOPCDAItems"
+								Height="auto"
+								MinHeight="23"
+								IsEnabled="{Binding Path=isConnected}"
+								Margin="4" TextWrapping="Wrap"
+								Text="{Binding Path=TextFilteritems,Mode=TwoWay}"
+								VerticalAlignment="Stretch"
+								HorizontalAlignment="Stretch"
+								FontSize="18"
+								FontFamily="Arial"
+								MinWidth="0">
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="TextChanged">
+									<i:InvokeCommandAction Command="{Binding TextChangeFilterItemsCommand}" CommandParameter="{Binding ElementName=TextBoxOPCDAItems,Path=Text}" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+					</TextBox>
+					</DockPanel>
+			
+						
+					<TreeView x:Name="TreeView"  		
+								 MaxHeight="280"
+					 ItemsSource="{Binding TreeListItems,UpdateSourceTrigger=PropertyChanged}"
+					 VirtualizingStackPanel.IsVirtualizing="True"
+					 VirtualizingStackPanel.VirtualizationMode="Recycling"
+					 HorizontalAlignment="Stretch"  VerticalAlignment="Stretch">
+					<TreeView.ItemTemplate>
+						<HierarchicalDataTemplate ItemsSource="{Binding Path=Value}" >
+							<TextBlock Foreground="Black" >
+									<StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+										<icons:PackIconFontAwesome Kind="FolderMinusSolid" Foreground="DarkOrange" Margin="0,5,0,0" ></icons:PackIconFontAwesome>
+										<Label Content="{Binding Path=Key}" VerticalContentAlignment="Center"></Label>										
+									</StackPanel>
+								</TextBlock>
+						
+							<HierarchicalDataTemplate.ItemTemplate>
+								<DataTemplate>
+									<TextBlock >
+									<icons:PackIconFontAwesome Kind="TagSolid" Foreground="Gray" Margin="0,5,0,0" ></icons:PackIconFontAwesome>
+									<Label Content="{Binding . , Converter={StaticResource SubStringKey},ConverterParameter=Key}"></Label>							
+									</TextBlock>
+								</DataTemplate>
+							</HierarchicalDataTemplate.ItemTemplate>
+						</HierarchicalDataTemplate>
+					</TreeView.ItemTemplate>
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="MouseDoubleClick" >
+							<i:InvokeCommandAction Command="{Binding Path=DoubleClick}" CommandParameter="{Binding ElementName=TreeView,Path=SelectedItem}"/>
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</TreeView>
+	
+					
+				</StackPanel>
 
-		</Grid>
+			</Grid>
+			</GroupBox>
+		
+		
+		
 		<GroupBox x:Name="GroupBoxTabItems" Header="Items"  Grid.Column="1" Grid.RowSpan="6" Grid.ColumnSpan="4" Margin="5">
 			
 		<TabControl  x:Name="tabControl"
@@ -196,7 +255,7 @@
 						</Grid.ColumnDefinitions>
 						<icons:PackIconFontAwesome Kind="SearchSolid" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" ></icons:PackIconFontAwesome>
 
-					<TextBox x:Name="textBox2"
+					<TextBox x:Name="TextBoxItemsActive"
 								HorizontalAlignment="Stretch"
 								MinHeight="23"
 								IsEnabled="{Binding Path=isConnected}"
@@ -210,7 +269,7 @@
 								Grid.Row="0">
 						<i:Interaction.Triggers>
 							<i:EventTrigger EventName="TextChanged">
-								<i:InvokeCommandAction Command="{Binding TxtChangeCommand2}" CommandParameter="{Binding ElementName=textBox2,Path=Text}" />
+									<i:InvokeCommandAction Command="{Binding TextChangeItemsActive}" CommandParameter="{Binding ElementName=TextBoxItemsActive,Path=Text}" />
 							</i:EventTrigger>
 						</i:Interaction.Triggers>
 					</TextBox>
@@ -219,6 +278,7 @@
 							  Style="{StaticResource btn-warning}"
 							  IsEnabled="{Binding Path=isConnected}"
 							  Command="{Binding Path=ButtonRemoveItem}"							 
+							   MaxWidth="50"
 							  MaxHeight="50"
 							  CommandParameter="{Binding ElementName=dataGrid2,Path=SelectedItem}"
 							  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="2" MinWidth="0" MinHeight="0"  Grid.Column="3" Grid.Row="0"   >
@@ -239,13 +299,19 @@
 								<!--<TextBlock Text="RemoveAll"></TextBlock>-->
 						</StackPanel>
 					</Button>
-					<Button x:Name="buttonSave" ToolTip="Save in file"  Style="{StaticResource btn-success}" IsEnabled="{Binding Path=isConnected}" Command="{Binding Path=ButtonSave}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="0" MinHeight="0" Margin="2" Grid.Column="5" Grid.Row="0" >
+					<Button x:Name="buttonSave"
+							   MaxWidth="50"
+							  MaxHeight="50"
+							  ToolTip="Save in file"  Style="{StaticResource btn-success}" IsEnabled="{Binding Path=isConnected}" Command="{Binding Path=ButtonSave}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="0" MinHeight="0" Margin="2" Grid.Column="5" Grid.Row="0" >
 						<StackPanel Orientation="Horizontal">
 							<icons:PackIconFontAwesome Kind="SaveRegular" ></icons:PackIconFontAwesome>
 							<!--<TextBlock Text="Save"></TextBlock>-->
 						</StackPanel>
 					</Button>
-					<Button x:Name="buttonLoad" ToolTip="Load from file"  Style="{StaticResource btn-info}" IsEnabled="{Binding Path=isConnected}"  Command="{Binding Path=ButtonLoad}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="0" MinHeight="0" Margin="2" Grid.Column="6" Grid.Row="0" >
+					<Button x:Name="buttonLoad"
+							   MaxWidth="50"
+							  MaxHeight="50"
+							  ToolTip="Load from file"  Style="{StaticResource btn-info}" IsEnabled="{Binding Path=isConnected}"  Command="{Binding Path=ButtonLoad}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="0" MinHeight="0" Margin="2" Grid.Column="6" Grid.Row="0" >
 						<StackPanel Orientation="Horizontal">
 							<icons:PackIconFontAwesome Kind="UploadSolid" ></icons:PackIconFontAwesome>
 							<!--<TextBlock Text="Load"></TextBlock>-->
@@ -255,9 +321,9 @@
 
 
 
-						<StackPanel Grid.Column="7" Grid.Row="0">
-							<RadioButton Grid.Column="7" Grid.Row="0" GroupName="filetype" Content="XML" Command="{Binding FileTypeCommand}" CommandParameter="XML" />
-							<RadioButton Grid.Column="7" Grid.Row="0" GroupName="filetype" Content="JSON" Command="{Binding FileTypeCommand}" CommandParameter="JSON" />
+						<StackPanel Grid.Column="7" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+							<RadioButton GroupName="filetype" Content="XML" Command="{Binding FileTypeCommand}" CommandParameter="XML" />
+							<RadioButton GroupName="filetype" Content="JSON" Command="{Binding FileTypeCommand}" CommandParameter="JSON" />
 						</StackPanel>
 						
 					
@@ -270,7 +336,7 @@
 								 IsReadOnly="True"
 								 CanUserDeleteRows="False"
 								 RowHeight="50"
-								 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,4,10,30" Grid.ColumnSpan="7" Grid.Row="1" >
+								 HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Margin="10,4,10,30" Grid.ColumnSpan="9" Grid.Row="1" >
 						<DataGrid.InputBindings>
 							<MouseBinding
 										MouseAction="LeftDoubleClick"

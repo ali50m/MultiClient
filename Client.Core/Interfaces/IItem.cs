@@ -11,7 +11,7 @@ namespace Client.Core.Interfaces
 	{
 		event UpdatedEventHandler Updated;
 
-		string ItemID { get; set; }
+		string ItemID { get;  }
 		object Value { get; }
 		DateTime LastUpdate { get; }
 		AccessRights AccessRights { get; }

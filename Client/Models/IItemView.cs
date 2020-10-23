@@ -7,7 +7,7 @@ namespace Client.Models
 {
 	public interface IItemView
 	{
-		string ItemID { get; set; }
+		string ItemID { get;}
 		object Value { get; }
 		VarEnum DataType { get; }
 		ItemType ItemType { get; }
