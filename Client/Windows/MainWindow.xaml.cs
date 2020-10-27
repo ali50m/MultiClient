@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,8 +37,14 @@ namespace Client.Windows
 				Panel.Navigate(new Uri("Pages/Main.xaml", UriKind.Relative));
 
 			Messenger.Default.Register<ShowMessage>(this, m =>
-			{				
-				MessageBox.Show(m.Text);
+			{
+				//MessageBox.Show(m.Text);
+				Application.Current.Dispatcher.Invoke(new Action(() =>
+				{
+					new AlertWindows(m.Text, Enums.AlertType.Error);
+				}));
+
+				
 			});
 
 

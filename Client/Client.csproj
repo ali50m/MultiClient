@@ -15,6 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,7 +28,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -173,14 +173,22 @@
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\ClientTypeToVisibilityConverter.cs" />
     <Compile Include="Converters\SubStringKeyConverter.cs" />
+    <Compile Include="Enums\AlertType.cs" />
     <Compile Include="Messaging\ShowMessage.cs" />
     <Compile Include="Models\IItemView.cs" />
     <Compile Include="Models\ItemViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\WindowUpdateViewModel.cs" />
+    <Compile Include="Windows\AlertWindows.xaml.cs">
+      <DependentUpon>AlertWindows.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\WindowUpdate.xaml.cs">
       <DependentUpon>WindowUpdate.xaml</DependentUpon>
     </Compile>
+    <Page Include="Windows\AlertWindows.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
