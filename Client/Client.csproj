@@ -58,8 +58,7 @@
       <HintPath>..\packages\ControlzEx.4.3.2\lib\net45\ControlzEx.dll</HintPath>
     </Reference>
     <Reference Include="EasyModbus, Version=5.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Resource\EasyModbus.dll</HintPath>
+      <HintPath>..\packages\EasyModbusTCP.5.5.0\lib\EasyModbus.dll</HintPath>
     </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.4.1.0, Culture=neutral, PublicKeyToken=0ffbc31322e9d308, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibsStd10.5.4.1.1\lib\net45\GalaSoft.MvvmLight.dll</HintPath>

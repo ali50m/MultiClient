@@ -4,7 +4,6 @@ using Client.Core.Exceptions;
 using Client.Core.Interfaces;
 using Client.Core.Models;
 using Client.Core.Services;
-using Marcom.OPC.DA;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ClientOPC.Test
