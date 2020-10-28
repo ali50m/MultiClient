@@ -41,7 +41,7 @@ namespace Client.Windows
 				//MessageBox.Show(m.Text);
 				Application.Current.Dispatcher.Invoke(new Action(() =>
 				{
-					new AlertWindows(m.Text, Enums.AlertType.Error);
+					new AlertWindows(m.Text, m.Type);
 				}));
 
 				

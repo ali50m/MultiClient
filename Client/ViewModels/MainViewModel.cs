@@ -569,7 +569,7 @@ namespace Client.ViewModels
 		}
 		public void SaveItems(object parameter)
 		{
-			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type")); return; }
+			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type",Enums.AlertType.Info)); return; }
 			SaveFileDialog SaveFileDialog = new SaveFileDialog();
 			switch (FileType)	
 			{
@@ -585,7 +585,7 @@ namespace Client.ViewModels
 				if (_fileManager != null)
 				{
 					if (_fileManager.SaveItems(Server.Items, SaveFileDialog.FileName))
-						Messenger.Default.Send(new Messaging.ShowMessage("Items Saved"));
+						Messenger.Default.Send(new Messaging.ShowMessage("Items Saved",Enums.AlertType.Success));
 
 				}
 			}
@@ -606,7 +606,7 @@ namespace Client.ViewModels
 		}
 		public void LoadItems(object parameter)
 		{
-			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type")); return; }
+			if (FileType == FileType.None) { Messenger.Default.Send(new Messaging.ShowMessage("Select a file type",Enums.AlertType.Info)); return; }
 			OpenFileDialog OpenFileDialog = new OpenFileDialog();
 			switch (FileType)
 			{

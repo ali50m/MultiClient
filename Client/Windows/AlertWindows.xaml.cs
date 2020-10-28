@@ -28,29 +28,32 @@ namespace Client.Windows
 		public AlertWindows(string message)
 		{
 			InitializeComponent();
-			this.Message.Content = message;
-			this.Show();
+			this.Message.Text = message;
+			this.ShowDialog();
 		}
 		public AlertWindows(string message,AlertType alertType)
 		{
 			InitializeComponent();
-			this.Message.Content = message;
+			this.Message.Text = message;
 
 			switch (alertType)
 			{
 				case AlertType.Success:
 					Icon.Kind = PackIconFontAwesomeKind.CheckCircleSolid;
+					Icon.Foreground = new SolidColorBrush(Colors.Green);
 					break;
 				case AlertType.Info:
-					Icon.Kind = PackIconFontAwesomeKind.QuestionCircleRegular;
+					Icon.Kind = PackIconFontAwesomeKind.InfoCircleSolid;
+					Icon.Foreground= new SolidColorBrush(Colors.Orange);
 					break;
 				case AlertType.Error:
 					Icon.Kind = PackIconFontAwesomeKind.TimesCircleSolid;
+					Icon.Foreground = new SolidColorBrush(Colors.Red);
 					break;
 
 			}
 
-			this.Show();
+			this.ShowDialog();
 		}
 
 		private void OkButton_Click(object sender, RoutedEventArgs e)
