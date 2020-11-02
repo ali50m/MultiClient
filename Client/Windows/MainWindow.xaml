@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:Client.Windows"
 		  xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
+							 Icon="/Resource/Icons/favicon-32x32.png"
 		   WindowStartupLocation="CenterScreen"  Background="WhiteSmoke"
-        Title="MultiClient" Height="600" Width="1000" Loaded="Window_Loaded" >
+        Title="MultiClient" Height="600" Width="1000" Loaded="Window_Loaded"  Closing="MetroWindow_Closing" >
 
 	<Grid>
 		<Grid.RowDefinitions>
@@ -26,19 +27,22 @@
 			</Grid.RowDefinitions>
 			<Border BorderBrush="#428bca" BorderThickness="0 0 0 3" VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="4">
 		</Border>
-			<!--
-			Use an image for the logo
-			<Image Source="as.png"
+			
+
+			<Image Source="/Resource/Images/M.png"
 					 Grid.Row="0" Grid.Column="0"
 					 MinWidth="0" MinHeight="0"
-					 VerticalAlignment="Center"
-					 HorizontalAlignment="Center"
-					 Margin="5,10,1,5">
+					 Margin="5"
+					 VerticalAlignment="Stretch"
+					 HorizontalAlignment="Left">
 			</Image>
-			-->
+			
 			<StackPanel>
-				<Label Content="MultiClient"
+				<Label Content="Multi Client"
 						 FontSize="36"
+						 FontStyle="Normal"
+						 FontFamily="Raavi"
+						 Foreground="#428bca"
 						 VerticalAlignment="Center"
 						 HorizontalAlignment="Center"
 						 Grid.Row="0" Grid.Column="0"></Label>

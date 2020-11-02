@@ -231,7 +231,8 @@
 						 FontWeight="Light"
 						 MinHeight="0" 
 						 Margin="0,0,0,0"
-						 VerticalAlignment="Stretch"
+							 IsEnabled="{Binding isConnected}"
+							 VerticalAlignment="Stretch"
 						 HorizontalAlignment="Stretch"
 						 MinWidth="0" >
 			<TabItem >

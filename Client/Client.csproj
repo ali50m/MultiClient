@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Client</RootNamespace>
     <AssemblyName>Client</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -173,6 +173,7 @@
     <Compile Include="Converters\ClientTypeToVisibilityConverter.cs" />
     <Compile Include="Converters\SubStringKeyConverter.cs" />
     <Compile Include="Enums\AlertType.cs" />
+    <Compile Include="Messaging\CloseWindow.cs" />
     <Compile Include="Messaging\ShowMessage.cs" />
     <Compile Include="Models\IItemView.cs" />
     <Compile Include="Models\ItemViewModel.cs" />
@@ -269,9 +270,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Resource\Icons\" />
-    <Folder Include="Resource\Images\" />
+    <Resource Include="Resource\Images\M.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resource\Icons\favicon-32x32.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

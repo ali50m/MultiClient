@@ -1,5 +1,6 @@
 ﻿
 using Client.Core.Services.Enums;
+using System;
 using System.Runtime.InteropServices;
 
 
@@ -9,7 +10,7 @@ namespace Client.Models
 	{
 		string ItemID { get;}
 		object Value { get; }
-		VarEnum DataType { get; }
+		Type DataType { get; }
 		ItemType ItemType { get; }
 	}
 }

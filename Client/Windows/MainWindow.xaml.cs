@@ -36,6 +36,8 @@ namespace Client.Windows
 				InitializeComponent();
 				Panel.Navigate(new Uri("Pages/Main.xaml", UriKind.Relative));
 
+
+
 			Messenger.Default.Register<ShowMessage>(this, m =>
 			{
 				//MessageBox.Show(m.Text);
@@ -55,6 +57,10 @@ namespace Client.Windows
 
 			VersionApplication.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
+		}
+		private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+		{
+			Messenger.Default.Send(new CloseWindow());
 		}
 	}
 }

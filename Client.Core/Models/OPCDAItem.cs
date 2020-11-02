@@ -20,17 +20,12 @@ namespace Client.Core.Models
 		{
 			this.ItemID = item.Item.ItemId;
 			this.Parent = item.Item.Group;
+			this.DataType = item.Item.CanonicalDataType;			
 			this.ItemType = ItemType.DA;
 			if (item.Item.AccessRights == OpcDaAccessRights.Read)
 				this.AccessRights = AccessRights.READABLE;
 			if (item.Item.AccessRights == OpcDaAccessRights.ReadWrite)
 				this.AccessRights = AccessRights.READWRITEABLE;
-			if(item.Item.CanonicalDataType == typeof(Boolean))		
-				this.DataType = VarEnum.VT_BOOL;
-			if (item.Item.CanonicalDataType == typeof(int))
-				this.DataType = VarEnum.VT_INT;
-			if (item.Item.CanonicalDataType == typeof(Single))
-				this.DataType = VarEnum.VT_INT;
 
 		}
 		private OpcDaGroup Parent;
@@ -43,7 +38,7 @@ namespace Client.Core.Models
 
 		public AccessRights AccessRights { get; private set; }
 
-		public VarEnum DataType  { get; private set; }
+		public Type DataType  { get; private set; }
 
 		public ItemType ItemType { get; set; }
 

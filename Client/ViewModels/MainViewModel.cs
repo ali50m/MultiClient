@@ -44,6 +44,14 @@ namespace Client.ViewModels
 					_fileManager = FileFactory.GetManager(fileType);
 				}
 			};
+
+			//When close the Main Windows Disconnect the servers
+			Messenger.Default.Register<CloseWindow>(this, async m =>
+			{
+				if (Server != null && Server.isConnect())
+					await ClickButtonConnect(null);
+
+			});
 		}
 
 	
@@ -436,15 +444,23 @@ namespace Client.ViewModels
 		}
 
 		private void RemoveItem(object parameter){
-			IItemView item = (IItemView)parameter;
-			if (item != null)
-			{				
-						Server.RemoveItem(item.ItemID,item.ItemType);
-						ListOfItemsActive.Remove(item);									
+			try
+			{
+					IItemView item = (IItemView)parameter;
+					if (item != null)
+					{				
+								Server.RemoveItem(item.ItemID,item.ItemType);
+								ListOfItemsActive.Remove(item);									
+					}
+					else
+					{				
+						Messenger.Default.Send(new Messaging.ShowMessage("You have to select an item",Enums.AlertType.Info));
+					}
 			}
-			else
-			{				
-				Messenger.Default.Send(new Messaging.ShowMessage("You have to select an item"));
+			catch (Exception)
+			{
+
+				Messenger.Default.Send(new Messaging.ShowMessage("Error trying to remove an item", Enums.AlertType.Error));
 			}
 		}
 

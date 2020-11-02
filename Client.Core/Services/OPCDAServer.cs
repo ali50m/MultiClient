@@ -159,28 +159,15 @@ namespace Client.Core.Services
 		private List<string> ListItems = new List<string>();
 		public List<string> BrowseChildren(IOpcDaBrowser browser, string itemId = null, int indent = 0)
 		{
-
-			// When itemId is null, root elements will be browsed.
-			OpcDaElementFilter opcDaElementFilter = new OpcDaElementFilter();
-
-
-			opcDaElementFilter.AccessRights = OpcDaAccessRights.ReadWrite;
-			OpcDaBrowseElement[] elements = browser.GetElements(itemId, opcDaElementFilter);
-			OpcDaBrowseElement[] elements2 = browser.GetElements("PLC1.Application.GVL_OPC_VARS");
-			//OpcDaItemProperties[] properties= browser.GetProperties(itemId.ToList());
+			OpcDaBrowseElement[] elements = browser.GetElements(itemId);
 			// Output elements.
 			foreach (OpcDaBrowseElement element in elements)
 			{
 				if (element.IsItem)
 					ListItems.Add(element.ItemId);
-				// Output the element.
-				//Console.Write(new String(' ', indent));
-				//Console.WriteLine(element);
-
 				// Skip elements without children.
 				if (!element.HasChildren)
 					continue;
-
 				// Output children of the element.
 				BrowseChildren(browser, element.ItemId, indent + 2);
 			}
@@ -190,6 +177,7 @@ namespace Client.Core.Services
 
 		public List<string> BrowseItems()
 		{
+			TitaniumAS.Opc.Client.OpcConfiguration.BatchSize = int.MaxValue;
 			var browser = new OpcDaBrowserAuto(Server);
 			return BrowseChildren(browser);
 		}

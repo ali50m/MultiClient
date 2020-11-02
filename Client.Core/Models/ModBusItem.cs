@@ -16,9 +16,9 @@ namespace Client.Core.Models
 			this.Parent = parent;
 			this.ItemType = type;
 			if (type == ItemType.Coils || type == ItemType.DiscreteInputs)
-				this.DataType = VarEnum.VT_BOOL;
+				this.DataType = typeof(bool);
 			if (type == ItemType.InputRegister || type == ItemType.HoldingRegister)
-				this.DataType = VarEnum.VT_INT;
+				this.DataType = typeof(int);
 			if (type == ItemType.HoldingRegister || type == ItemType.Coils)
 				this.AccessRights = AccessRights.READWRITEABLE;
 			if (type == ItemType.DiscreteInputs || type == ItemType.InputRegister)
@@ -34,7 +34,7 @@ namespace Client.Core.Models
 		public event Interfaces.UpdatedEventHandler Updated;
 
 		public DateTime LastUpdate { get; private set; }
-		public VarEnum DataType { get; }
+		public Type DataType { get; }
 		public AccessRights AccessRights { get; }
 		public ItemType ItemType { get; set; }
 		public void OnUpdated(object newValue) { this.LastUpdate = DateTime.Now; this.Value = newValue; this.Updated?.Invoke(this, new ItemEventArgs { oldValue = this.Value, newValue = newValue }); }
@@ -53,9 +53,9 @@ namespace Client.Core.Models
 					throw new ServerException("The address is not a valid integer");
 				}
 				
-			switch (this.DataType)
-			{
-				case VarEnum.VT_BOOL:					
+
+			if(typeof(bool) == this.DataType)
+				{
 					bool result;
 					if (this.AccessRights == AccessRights.READWRITEABLE)
 					{
@@ -78,8 +78,10 @@ namespace Client.Core.Models
 						if (result != (bool)this.Value)
 							OnUpdated(result);
 					}
-					break;
-				case VarEnum.VT_INT:
+
+				}else if (typeof(int) == this.DataType)
+				{
+
 					int result2;
 					if (this.AccessRights == AccessRights.READWRITEABLE)
 					{
@@ -101,10 +103,7 @@ namespace Client.Core.Models
 						int.TryParse(this.Value.ToString(), out int actual);
 						if (result2 != actual)
 							OnUpdated(result2);
-					break;
-				default:
-					break;
-			}
+				}						
 
 			}
 			catch (ServerException ex)

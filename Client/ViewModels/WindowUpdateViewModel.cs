@@ -14,7 +14,7 @@ namespace Client.ViewModels
 		public WindowUpdateViewModel(IItemView oPCItem)
 		{
 			Item = oPCItem;
-			if(Item.DataType == System.Runtime.InteropServices.VarEnum.VT_BOOL)
+			if(Item.DataType == typeof(bool))
 			{
 				isBool = true;
 				isNumeric = false;

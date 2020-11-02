@@ -15,7 +15,7 @@ namespace Client.Core.Interfaces
 		object Value { get; }
 		DateTime LastUpdate { get; }
 		AccessRights AccessRights { get; }
-		VarEnum DataType { get;}
+		Type DataType { get;}
 		ItemType ItemType { get; set; }
 
 

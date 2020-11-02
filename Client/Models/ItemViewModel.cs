@@ -26,7 +26,7 @@ namespace Client.Models
 
 		public object Value { get => Item.Value; }
 
-		public VarEnum DataType { get => Item.DataType; }
+		public Type DataType { get => Item.DataType; }
 
 		public ItemType ItemType { get => Item.ItemType; }
 
